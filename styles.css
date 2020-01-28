@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap');
+body {
+    background-color: gray;
+    font-family: 'Press Start 2P', 'Courier New', Courier, monospace;
+    text-align: center;
+}
+
+#board {
+    position: absolute;
+    right: calc(50% - 15em);
+    top: calc(55% - 15em);
+    background-color: lightgrey;
+    height: 30em;
+    width: 30em;
+    display: grid;
+    grid-template-columns: repeat(30, 1fr);
+}
+
+.square {
+    background-image: url("/images/square.png");
+    background-size: cover;
+}
+
+.flag {
+    background-image: url("/images/flag.png");
+}
