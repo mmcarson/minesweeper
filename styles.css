@@ -7,13 +7,13 @@ body {
 
 #board {
     position: absolute;
-    right: calc(50% - 15em);
-    top: calc(55% - 15em);
+    right: calc(50% - 15rem);
+    top: calc(55% - 15rem);
     background-color: lightgrey;
-    height: 30em;
-    width: 30em;
+    height: 30rem;
+    width: 30rem;
     display: grid;
-    grid-template-columns: repeat(30, 1fr);
+    grid-template-columns: repeat(20, 1fr);
 }
 
 .square {
@@ -23,4 +23,23 @@ body {
 
 .flag {
     background-image: url("/images/flag.png");
+}
+
+.opened {
+    background-image: none;
+    background-color: rgb(194, 194, 194);
+    outline: 2px solid gray;
+    /* outline puts the line on the inside as opposed to border */
+}
+
+#board p {
+    line-height: 0;
+    position: relative;
+    margin: 0%;
+    top: 50%;
+    display: none;
+}
+
+.opened p {
+    display: block !important;
 }
