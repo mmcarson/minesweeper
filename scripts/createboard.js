@@ -22,12 +22,13 @@ class Board {
         for (let i = 0; i < width * height; i++) {
             let squareElement = document.createElement("div")
             squareElement.classList.add("square")
-            addParagraph(Math.ceil(Math.random() * 8), squareElement)
+
             squareElement.addEventListener("mousedown", event => {
                 if (event.button == RIGHT) {
                     squareElement.classList.add("flag")
                 } else if (event.button == LEFT) {
                     squareElement.classList.add("opened")
+                    addParagraph(Math.ceil(Math.random() * 8), squareElement)
                 }
             })
             boardElement.appendChild(squareElement)
@@ -42,6 +43,14 @@ class Board {
             this.mineSet.add(Math.floor(Math.random() * this.width * this.height))
         }
         console.log(this.mineSet)
+        this.addNumbers()
+    }
+
+    addNumbers() {
+        this.squares = new Array(this.width * this.height)
+        this.mineSet.forEach((element) => {
+            this.findNeighbors(element).forEach((neighbor) => this.squares[neighbor]++)
+        })
     }
 
     findIndex(x, y) {
@@ -53,23 +62,18 @@ class Board {
             y = Math.floor(index / this.width),
             x = index % this.width
 
-        // for (let i=-1; i<=1; i++) {
-        //     for (let j=-1; j<=1; j++) {
-        //         square = index + 
-        //     }
-        // }
-        // // left
-        // neighbors.push(index - 1)
-        // // right
-        // neighbors.push(index + 1)
-        // // above
-        // neighbors.push(index - this.width)
-        // // below
-        // neighbors.push(index + this.width)
-        // // upper left
-        // neighbors.push(index - this.width - 1)
-        // // upper right
-        // neighbors.push(index - this.width + 1)
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
+                const currentX = x + i,
+                    currentY = y + j
+                if (currentX >= 0 && currentY >= 0) {
+                    let currentIndex = this.findIndex(currentX, currentY)
+                    if (currentIndex != index)
+                        neighbors.push()
+                }
+            }
+        }
+        return neighbors
     }
 }
 
