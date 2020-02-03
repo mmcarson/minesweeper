@@ -12,7 +12,9 @@ function addParagraph(text, parent) {
     }
 }
 
-
+const equalSets = function(a, b) {
+    return a.size == b.size && [...a] == [...b]
+}
 
 class Board {
     constructor(width, height, mines) {
@@ -22,17 +24,27 @@ class Board {
         this.boardElement = document.getElementById("board")
         this.boardElement.style.gridTemplateColumns = `repeat(${width}, 1fr)`
         this.addMines()
+        this.flagged = new Set()
     }
 
-    showSquare(index, squareElement, win) {
+    showSquare(index, squareElement, win, repeated) {
         squareElement.classList.add("opened")
         if (this.mineSet.has(index)) {
             squareElement.classList.add("mine")
-            if (!win)
+            if (!win) {
                 squareElement.classList.add("lost")
+                if (!repeated)
+                    this.showAllMines(false)
+            }
         } else {
             addParagraph(this.squares[index].value, squareElement)
         }
+    }
+
+    showAllMines(win) {
+        this.mineSet.forEach(mine => {
+            this.showSquare(mine, this.squares[mine].squareElement, win, true)
+        })
     }
 
     addMines() {
@@ -64,15 +76,31 @@ class Board {
         })
         this.squares.forEach((element, index) => {
             this.boardElement.appendChild(element.squareElement)
-            element.squareElement.addEventListener("mousedown", event => {
-                if (event.button == RIGHT) {
-                    squareElement.classList.add("flag")
-                } else if (event.button == LEFT) {
-                    this.showSquare(index, element.squareElement)
-                }
-            })
+            this.addListeners(element, index)
         })
         console.log(this.squares)
+    }
+
+    addListeners(element, index) {
+        element.squareElement.addEventListener("mousedown", event => {
+            if (event.button == RIGHT) {
+                element.squareElement.classList.toggle("flag")
+                if (this.flagged.has(index)) {
+                    this.flagged.delete(index)
+                } else {
+                    this.flagged.add(index)
+                }
+                this.checkWin()
+            } else if (event.button == LEFT) {
+                this.showSquare(index, element.squareElement)
+            }
+        })
+    }
+
+    checkWin() {
+        if (equalSets(this.mineSet, this.flagged)) {
+            this.showAllMines(true)
+        }
     }
 
     findIndex(x, y) {
