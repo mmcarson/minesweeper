@@ -25,6 +25,11 @@ class Board {
         this.boardElement.style.gridTemplateColumns = `repeat(${width}, 1fr)`
         this.addMines()
         this.flagged = new Set()
+        this.showAllSquares()
+    }
+
+    showAllSquares() {
+        this.squares.forEach((square, index) => this.showSquare(index, square.squareElement, true, true))
     }
 
     showSquare(index, squareElement, win, repeated) {
@@ -68,17 +73,17 @@ class Board {
         for (let i = 0; i < this.width * this.height; i++) {
             this.squares[i] = { value: 0, squareElement: this.newSquareElement() }
         }
-        console.log({ squares: this.squares })
+        // console.log({ squares: this.squares })
         this.mineSet.forEach((element) => {
             this.findNeighbors(element).forEach((neighbor) => {
                 this.squares[neighbor].value++
             })
         })
         this.squares.forEach((element, index) => {
-            this.boardElement.appendChild(element.squareElement)
-            this.addListeners(element, index)
-        })
-        console.log(this.squares)
+                this.boardElement.appendChild(element.squareElement)
+                this.addListeners(element, index)
+            })
+            // console.log(this.squares)
     }
 
     addListeners(element, index) {
@@ -118,8 +123,11 @@ class Board {
                     currentY = y + j
                 if (currentX >= 0 && currentY >= 0) {
                     let currentIndex = this.findIndex(currentX, currentY)
-                    if (currentIndex != index && currentIndex < this.width * this.height)
+                    if (currentIndex != index && currentIndex < this.width * this.height) {
+                        if (x == this.width - 1)
+                            console.log({ currentX, currentY, currentIndex })
                         neighbors.push(currentIndex)
+                    }
                 }
             }
         }
