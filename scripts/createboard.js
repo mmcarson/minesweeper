@@ -17,35 +17,39 @@ class Board {
         this.width = width
         this.height = height
         this.mines = mines
+        this.boardElement = document.getElementById("board")
+        this.boardElement.style.gridTemplateColumns = `repeat(${width}, 1fr)`
         this.addMines()
 
-        const boardElement = document.getElementById("board")
-        boardElement.style.gridTemplateColumns = `repeat(${width}, 1fr)`
-        for (let i = 0; i < width * height; i++) {
-            let squareElement = document.createElement("div")
-            squareElement.classList.add("square")
 
-            squareElement.addEventListener("mousedown", event => {
-                if (event.button == RIGHT) {
-                    squareElement.classList.add("flag")
-                } else if (event.button == LEFT) {
-                    // squareElement.classList.add("opened")
-                    // addParagraph(Math.ceil(Math.random() * 8), squareElement)
-                    this.showSquare(i, squareElement)
-                }
-            })
-            boardElement.appendChild(squareElement)
-        }
 
-        this.boardElement = boardElement
+        // for (let i = 0; i < width * height; i++) {
+        //     let squareElement = document.createElement("div")
+        //     squareElement.classList.add("square")
+
+        //     squareElement.addEventListener("mousedown", event => {
+        //         if (event.button == RIGHT) {
+        //             squareElement.classList.add("flag")
+        //         } else if (event.button == LEFT) {
+        //             // squareElement.classList.add("opened")
+        //             // addParagraph(Math.ceil(Math.random() * 8), squareElement)
+        //             this.showSquare(i, squareElement)
+        //         }
+        //     })
+        //     boardElement.appendChild(squareElement)
+        // }
+
+        // this.boardElement = boardElement
     }
 
     showSquare(index, squareElement) {
         squareElement.classList.add("opened")
         if (this.mineSet.has(index)) {
             squareElement.classList.add("mine")
+            console.log("mine")
         } else {
             addParagraph(this.squares[index].value, squareElement)
+            console.log("not mine")
         }
     }
 
@@ -61,25 +65,30 @@ class Board {
     newSquareElement() {
         let squareElement = document.createElement("div")
         squareElement.classList.add("square")
-
-        squareElement.addEventListener("mousedown", event => {
-            if (event.button == RIGHT) {
-                squareElement.classList.add("flag")
-            } else if (event.button == LEFT) {
-                // squareElement.classList.add("opened")
-                // addParagraph(Math.ceil(Math.random() * 8), squareElement)
-                this.showSquare(i, squareElement)
-            }
-        })
-        boardElement.appendChild(squareElement)
         return squareElement
     }
 
     addNumbers() {
-        this.squares = new Array(this.width * this.height)
-        this.squares.forEach(element => element = { value: 0, squareElement: this.newSquareElement() })
+        this.squares = new Array()
+
+        for (let i = 0; i < this.width * this.height; i++) {
+            this.squares[i] = { value: 0, squareElement: this.newSquareElement() }
+        }
+        // this.squares.forEach(element => element = { value: 0, squareElement: this.newSquareElement() })
         this.mineSet.forEach((element) => {
             this.findNeighbors(element).forEach((neighbor) => this.squares[neighbor].value++)
+        })
+        this.squares.forEach(element => {
+            this.boardElement.appendChild(element.squareElement)
+            element.squareElement.addEventListener("mousedown", event => {
+                if (event.button == RIGHT) {
+                    squareElement.classList.add("flag")
+                } else if (event.button == LEFT) {
+                    // squareElement.classList.add("opened")
+                    // addParagraph(Math.ceil(Math.random() * 8), squareElement)
+                    this.showSquare(element.value, element.squareElement)
+                }
+            })
         })
         console.log(this.squares)
     }
