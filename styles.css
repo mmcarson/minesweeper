@@ -7,13 +7,12 @@ body {
 
 #board {
     position: absolute;
-    right: calc(50% - 15rem);
-    top: calc(55% - 15rem);
+    right: calc(50% - 15em);
+    top: calc(55% - 15em);
     background-color: lightgrey;
-    height: 30rem;
-    width: 30rem;
+    height: 30em;
+    width: 30em;
     display: grid;
-    /* grid-template-columns: repeat(20, 1fr); */
 }
 
 .square {
@@ -38,6 +37,10 @@ body {
 
 .lost {
     background-color: red;
+}
+
+.won {
+    background-color: green;
 }
 
 #board p {

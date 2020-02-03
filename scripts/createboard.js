@@ -13,7 +13,7 @@ function addParagraph(text, parent) {
 }
 
 const equalSets = function(a, b) {
-    return a.size == b.size && [...a] == [...b]
+    return a.size == b.size && [...a].map(element => b.has(element)).reduce((previous, current) => previous && current)
 }
 
 class Board {
@@ -25,14 +25,15 @@ class Board {
         this.boardElement.style.gridTemplateColumns = `repeat(${width}, 1fr)`
         this.addMines()
         this.flagged = new Set()
-        this.showAllSquares()
+        this.unopened = new Set(new Array(width * height).keys())
+            //this.showAllSquares(this.squares)
     }
 
-    showAllSquares() {
-        this.squares.forEach((square, index) => this.showSquare(index, square.squareElement, true, true))
+    showAllSquares(squares) { // this and showAllMines should be one function
+        squares.forEach((square, index) => this.showSquare(index, square.squareElement, true, true))
     }
 
-    showSquare(index, squareElement, win, repeated) {
+    showSquare(index, squareElement, win, repeated) { // this should just take in index
         squareElement.classList.add("opened")
         if (this.mineSet.has(index)) {
             squareElement.classList.add("mine")
@@ -40,9 +41,17 @@ class Board {
                 squareElement.classList.add("lost")
                 if (!repeated)
                     this.showAllMines(false)
+            } else {
+                squareElement.classList.add("won")
             }
         } else {
             addParagraph(this.squares[index].value, squareElement)
+        }
+    }
+
+    revealNeighbors(index) {
+        if (this.squares[index].value == 0) {
+
         }
     }
 
@@ -57,7 +66,7 @@ class Board {
         while (this.mineSet.size < this.mines) {
             this.mineSet.add(Math.floor(Math.random() * this.width * this.height))
         }
-        console.log(this.mineSet)
+        //console.log(this.mineSet)
         this.addNumbers()
     }
 
@@ -73,17 +82,15 @@ class Board {
         for (let i = 0; i < this.width * this.height; i++) {
             this.squares[i] = { value: 0, squareElement: this.newSquareElement() }
         }
-        // console.log({ squares: this.squares })
         this.mineSet.forEach((element) => {
             this.findNeighbors(element).forEach((neighbor) => {
                 this.squares[neighbor].value++
             })
         })
         this.squares.forEach((element, index) => {
-                this.boardElement.appendChild(element.squareElement)
-                this.addListeners(element, index)
-            })
-            // console.log(this.squares)
+            this.boardElement.appendChild(element.squareElement)
+            this.addListeners(element, index)
+        })
     }
 
     addListeners(element, index) {
@@ -95,15 +102,18 @@ class Board {
                 } else {
                     this.flagged.add(index)
                 }
-                this.checkWin()
             } else if (event.button == LEFT) {
+                this.unopened.delete(index)
                 this.showSquare(index, element.squareElement)
             }
+            this.checkWin()
         })
     }
 
     checkWin() {
-        if (equalSets(this.mineSet, this.flagged)) {
+        console.log({ mineSet: this.mineSet, flagged: this.flagged, unopened: this.unopened })
+
+        if (equalSets(this.mineSet, this.flagged) || equalSets(this.mineSet, this.unopened) || equalSets(this.mineSet, new Set([...this.flagged, ...this.unopened]))) {
             this.showAllMines(true)
         }
     }
@@ -124,8 +134,6 @@ class Board {
                 if (currentX >= 0 && currentX < this.width && currentY >= 0) {
                     let currentIndex = this.findIndex(currentX, currentY)
                     if (currentIndex != index && currentIndex < this.width * this.height) {
-                        if (x == this.width - 1)
-                            console.log({ index, x, y, currentX, currentY, currentIndex })
                         neighbors.push(currentIndex)
                     }
                 }
