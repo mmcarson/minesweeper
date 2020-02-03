@@ -4,10 +4,12 @@ const LEFT = 0
 const COLORS = ["blue", "green", "red", "navy", "maroon", "teal", "black", "gray"]
 
 function addParagraph(text, parent) {
-    p = document.createElement("p")
-    p.innerText = text
-    p.style.color = (COLORS[text - 1])
-    parent.appendChild(p)
+    if (text != 0) {
+        p = document.createElement("p")
+        p.innerText = text
+        p.style.color = (COLORS[text - 1])
+        parent.appendChild(p)
+    }
 }
 
 
@@ -22,11 +24,12 @@ class Board {
         this.addMines()
     }
 
-    showSquare(index, squareElement) {
-        console.log(index)
+    showSquare(index, squareElement, win) {
         squareElement.classList.add("opened")
         if (this.mineSet.has(index)) {
             squareElement.classList.add("mine")
+            if (!win)
+                squareElement.classList.add("lost")
         } else {
             addParagraph(this.squares[index].value, squareElement)
         }
@@ -53,8 +56,11 @@ class Board {
         for (let i = 0; i < this.width * this.height; i++) {
             this.squares[i] = { value: 0, squareElement: this.newSquareElement() }
         }
+        console.log({ squares: this.squares })
         this.mineSet.forEach((element) => {
-            this.findNeighbors(element).forEach((neighbor) => this.squares[neighbor].value++)
+            this.findNeighbors(element).forEach((neighbor) => {
+                this.squares[neighbor].value++
+            })
         })
         this.squares.forEach((element, index) => {
             this.boardElement.appendChild(element.squareElement)
@@ -78,22 +84,17 @@ class Board {
             y = Math.floor(index / this.width),
             x = index % this.width
 
-        console.log({ x, y })
-
         for (let i = -1; i <= 1; i++) {
             for (let j = -1; j <= 1; j++) {
                 const currentX = x + i,
                     currentY = y + j
-                console.log({ currentX, currentY })
                 if (currentX >= 0 && currentY >= 0) {
                     let currentIndex = this.findIndex(currentX, currentY)
-                    console.log({ currentIndex })
-                    if (currentIndex != index)
+                    if (currentIndex != index && currentIndex < this.width * this.height)
                         neighbors.push(currentIndex)
                 }
             }
         }
-        console.log(neighbors)
         return neighbors
     }
 }

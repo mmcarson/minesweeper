@@ -25,15 +25,19 @@ body {
     background-image: url("/images/flag.png");
 }
 
-.mine {
-    background-image: url("/images/mine.png");
-}
-
 .opened {
     background-image: none;
     background-color: rgb(194, 194, 194);
     outline: 2px solid gray;
     /* outline puts the line on the inside as opposed to border */
+}
+
+.mine {
+    background-image: url("/images/mine.png");
+}
+
+.lost {
+    background-color: red;
 }
 
 #board p {
