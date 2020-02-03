@@ -23,6 +23,7 @@ class Board {
     }
 
     showSquare(index, squareElement) {
+        console.log(index)
         squareElement.classList.add("opened")
         if (this.mineSet.has(index)) {
             squareElement.classList.add("mine")
@@ -55,13 +56,13 @@ class Board {
         this.mineSet.forEach((element) => {
             this.findNeighbors(element).forEach((neighbor) => this.squares[neighbor].value++)
         })
-        this.squares.forEach(element => {
+        this.squares.forEach((element, index) => {
             this.boardElement.appendChild(element.squareElement)
             element.squareElement.addEventListener("mousedown", event => {
                 if (event.button == RIGHT) {
                     squareElement.classList.add("flag")
                 } else if (event.button == LEFT) {
-                    this.showSquare(element.value, element.squareElement)
+                    this.showSquare(index, element.squareElement)
                 }
             })
         })
@@ -77,17 +78,22 @@ class Board {
             y = Math.floor(index / this.width),
             x = index % this.width
 
+        console.log({ x, y })
+
         for (let i = -1; i <= 1; i++) {
             for (let j = -1; j <= 1; j++) {
                 const currentX = x + i,
                     currentY = y + j
+                console.log({ currentX, currentY })
                 if (currentX >= 0 && currentY >= 0) {
                     let currentIndex = this.findIndex(currentX, currentY)
+                    console.log({ currentIndex })
                     if (currentIndex != index)
-                        neighbors.push()
+                        neighbors.push(currentIndex)
                 }
             }
         }
+        console.log(neighbors)
         return neighbors
     }
 }
