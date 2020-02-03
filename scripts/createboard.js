@@ -121,11 +121,11 @@ class Board {
             for (let j = -1; j <= 1; j++) {
                 const currentX = x + i,
                     currentY = y + j
-                if (currentX >= 0 && currentY >= 0) {
+                if (currentX >= 0 && currentX < this.width && currentY >= 0) {
                     let currentIndex = this.findIndex(currentX, currentY)
                     if (currentIndex != index && currentIndex < this.width * this.height) {
                         if (x == this.width - 1)
-                            console.log({ currentX, currentY, currentIndex })
+                            console.log({ index, x, y, currentX, currentY, currentIndex })
                         neighbors.push(currentIndex)
                     }
                 }
