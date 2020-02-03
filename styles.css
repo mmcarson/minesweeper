@@ -25,6 +25,10 @@ body {
     background-image: url("/images/flag.png");
 }
 
+.mine {
+    background-image: url("/images/mine.png");
+}
+
 .opened {
     background-image: none;
     background-color: rgb(194, 194, 194);
@@ -37,10 +41,4 @@ body {
     position: relative;
     margin: 0%;
     top: 50%;
-    /* display: none; */
 }
-
-
-/* .opened p {
-    display: block !important;
-} */
