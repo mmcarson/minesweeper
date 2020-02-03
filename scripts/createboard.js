@@ -20,36 +20,14 @@ class Board {
         this.boardElement = document.getElementById("board")
         this.boardElement.style.gridTemplateColumns = `repeat(${width}, 1fr)`
         this.addMines()
-
-
-
-        // for (let i = 0; i < width * height; i++) {
-        //     let squareElement = document.createElement("div")
-        //     squareElement.classList.add("square")
-
-        //     squareElement.addEventListener("mousedown", event => {
-        //         if (event.button == RIGHT) {
-        //             squareElement.classList.add("flag")
-        //         } else if (event.button == LEFT) {
-        //             // squareElement.classList.add("opened")
-        //             // addParagraph(Math.ceil(Math.random() * 8), squareElement)
-        //             this.showSquare(i, squareElement)
-        //         }
-        //     })
-        //     boardElement.appendChild(squareElement)
-        // }
-
-        // this.boardElement = boardElement
     }
 
     showSquare(index, squareElement) {
         squareElement.classList.add("opened")
         if (this.mineSet.has(index)) {
             squareElement.classList.add("mine")
-            console.log("mine")
         } else {
             addParagraph(this.squares[index].value, squareElement)
-            console.log("not mine")
         }
     }
 
@@ -74,7 +52,6 @@ class Board {
         for (let i = 0; i < this.width * this.height; i++) {
             this.squares[i] = { value: 0, squareElement: this.newSquareElement() }
         }
-        // this.squares.forEach(element => element = { value: 0, squareElement: this.newSquareElement() })
         this.mineSet.forEach((element) => {
             this.findNeighbors(element).forEach((neighbor) => this.squares[neighbor].value++)
         })
@@ -84,8 +61,6 @@ class Board {
                 if (event.button == RIGHT) {
                     squareElement.classList.add("flag")
                 } else if (event.button == LEFT) {
-                    // squareElement.classList.add("opened")
-                    // addParagraph(Math.ceil(Math.random() * 8), squareElement)
                     this.showSquare(element.value, element.squareElement)
                 }
             })
